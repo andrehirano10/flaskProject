@@ -1,0 +1,91 @@
+<html>
+<head>
+  <title>Poker Probability</title>
+  <style>
+    /* Style for the dialog box */
+    #dialog {
+      background-color: white;
+      border: 1px solid black;
+      width: 300px;
+      padding: 10px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    #hand {
+      width: 100%;
+      padding: 5px;
+      border: 1px solid black;
+    }
+
+    #submit {
+      background-color: green;
+      color: white;
+      border: none;
+      padding: 5px;
+      margin-top: 10px;
+    }
+
+    #result {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body style="background: url(https://images.unsplash.com/photo-1446669052213-5dcff53f1f3f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1173&q=80) no-repeat center center fixed; background-size: cover;">
+  <!-- HTML for the dialog box -->
+  <div id="dialog">
+  <p>Enter the name of a hand:</p>
+  <input type="text" id="hand">
+  <button id="submit">Submit</button>
+  <button id="reset">Reset</button>
+  <p id="result"></p>
+</div>
+
+  <ul style="list-style-type: none; font-family: sans-serif; font-size: 18px; font-weight: bold; margin: 0; padding: 0;">
+    <li>Royal Flush</li>
+    <li>Straight Flush</li>
+    <li>Four of a Kind</li>
+    <li>Full House</li>
+    <li>Flush</li>
+    <li>Straight</li>
+    <li>Three of a Kind</li>
+    <li>Two Pair</li>
+    <li>One Pair</li>
+    <li>High Card</li>
+  </ul>
+
+  <!-- JavaScript for handling user input and displaying the result -->
+  <script>
+  const submitButton = document.getElementById("submit");
+  const resetButton = document.getElementById("reset");
+  const handInput = document.getElementById("hand");
+  const resultParagraph = document.getElementById("result");
+
+  // Submit the form when the submit button is clicked
+  submitButton.addEventListener("click", () => {
+    // Get the user's input
+    const hand = handInput.value.toLowerCase();
+
+    // Send a POST request to the server with the user's input
+    fetch("/probability", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: `hand=${encodeURIComponent(hand)}`
+    }).then(response => {
+      // When the server responds, display the result in the dialog box
+      response.text().then(result => {
+        resultParagraph.innerHTML = result;
+      });
+    });
+  });
+
+  resetButton.addEventListener("click", () => {
+    handInput.value = "";
+    resultParagraph.innerHTML = "";
+  });
+</script>
